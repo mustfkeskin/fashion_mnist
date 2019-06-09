@@ -63,16 +63,16 @@ Token üzerinden gitmek isteyenler dockerfile'daki --NotebookApp.token= parametr
 
 ## Sonuçlar
 ### Multi Layer Perceptron
-<img src="doc/img/mlp_confussion_matrix.png" width="50%">
+<img src="doc/img/mlp_acc.png" width="50%"><img src="doc/img/mlp_confussion_matrix.png" width="50%">
 
 ### Simple CNN
-<img src="doc/img/simpleCNN_confussion_matrix.png" width="50%">
+<img src="doc/img/simpleCNN_acc.png" width="50%"><img src="doc/img/simpleCNN_confussion_matrix.png" width="50%">
 
 ### CNN with Dropout
-<img src="doc/img/cnnDropout_confussion_matrix.png" width="50%">
+<img src="doc/img/cnnDropout_acc.png" width="50%"><img src="doc/img/cnnDropout_confussion_matrix.png" width="50%">
 
 ### CNN + Dropout + BatchNormalization
-<img src="doc/img/cnnBatchNorm_confussion_matrix.png" width="50%">
+<img src="doc/img/cnnBatchNorm_acc.png" width="50%"><img src="doc/img/cnnBatchNorm_confussion_matrix.png" width="50%">
 
 ### Simple VGG
 <img src="doc/img/simpleVGG_acc.png" width="50%"><img src="doc/img/simpleVGG_confussion_matrix.png" width="50%">
