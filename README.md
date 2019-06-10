@@ -10,12 +10,12 @@
 * [Kurulum](#kurulum)
 * [Sonuclar](#sonuclar)
 * [Görsellestirme](#tahminleri-gorsellestirme)
+* [Kohen Kappa Scores](#kohen-kappa-scores)
 
 </p></details><p></p>
 
 
-<img src="doc/img/fashion-mnist-sprite.png" width="100%">
-<img src="doc/img/embedding.gif" width="50%"><img src="doc/img/umap.gif" width="50%">
+<img src="doc/img/fashion-mnist-sprite.png" width="100%"><img src="doc/img/embedding.gif" width="50%"><img src="doc/img/umap.gif" width="50%">
 
 
 ## Etiketler
@@ -137,7 +137,8 @@ Test sonuçlarında yer alan tabloda '_dataAug' data augmentation yapıldığı 
 <img src="doc/img/mobilenetv2_acc_dataAug.png" width="50%"><img src="doc/img/mobilenetv2_confussion_matrix_dataAug.png" width="50%">
 
 
-### Kohen Kappa Scores
+## Kohen Kappa Scores
+Kappa skorları incelendiğinde modellerin birbirine benzer sonuçlar ürettiği için ensemble tekniklerinin stacking ve majority voting normal algoritmaların performansını geçemediği görülmüştür.
 <img src="doc/img/kappa_scores.png" width="100%">
 
 
