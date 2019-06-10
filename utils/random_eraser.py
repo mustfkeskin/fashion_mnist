@@ -30,3 +30,11 @@ def get_random_eraser(p=0.5, s_l=0.02, s_h=0.4, r_1=0.3, r_2=1/0.3, v_l=0, v_h=2
         return input_img
 
     return eraser
+
+
+def random_crop(img, random_crop_size):
+    height, width = img.shape[0], img.shape[1]
+    dy, dx = random_crop_size
+    x = np.random.randint(0, width - dx + 1)
+    y = np.random.randint(0, height - dy + 1)
+    return img[y:(y+dy), x:(x+dx), :]

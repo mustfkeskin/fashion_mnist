@@ -130,7 +130,7 @@ def buildCNN(num_classes=10, input_shape = (32,32,1)):
 
 	# CONV => RELU => CONV => RELU => POOL layer set	
 	model.add(Conv2D(32, (3, 3), padding="same",
-		input_shape=inputShape))
+		input_shape=input_shape))
 	model.add(Activation("relu"))
 	model.add(BatchNormalization(axis=chanDim))
 	model.add(Conv2D(32, (3, 3), padding="same"))
@@ -266,13 +266,17 @@ def buildSimpleInception(num_classes=10, input_shape = (32,32,1)):
 
 	# define model input
 	visible = Input(shape=input_shape)
+	
 	# add inception block 1
 	layer = inception_module(visible, 16, 24, 32, 4, 8, 8)
+	
 	# BN
 	layer = BatchNormalization()(layer)
 	layer = Dropout(0.3)(layer)
+	
 	# add inception block 2
 	layer = inception_module(layer, 32, 32, 48, 8, 24, 16)
+	
 	# create model
 	layer = Flatten()(layer)
 	layer = Dense(64, activation='relu')(layer)
@@ -291,18 +295,23 @@ def buildSimpleInception(num_classes=10, input_shape = (32,32,1)):
 def residual_module(layer_in, n_filters):
 
 	merge_input = layer_in
+	
 	# check if the number of filters needs to be increase, assumes channels last format
 	if layer_in.shape[-1] != n_filters:
 		merge_input = Conv2D(n_filters, (1,1), padding='same', activation='relu', kernel_initializer='he_normal')(layer_in)
+	
 	# conv1
 	conv1 = Conv2D(n_filters, (3,3), dilation_rate=2, padding='same', activation='relu', kernel_initializer='he_normal')(layer_in)
+	
 	# conv2
 	conv2 = Conv2D(n_filters, (3,3), dilation_rate=2, padding='same', activation='linear', kernel_initializer='he_normal')(conv1)
 
 	conv2 = BatchNormalization()(conv2)
 	conv2 = Dropout(0.3)(conv2)
+
 	# add filters, assumes filters/channels last
 	layer_out = add([conv2, merge_input])
+
 	# activation function
 	layer_out = Activation('relu')(layer_out)
 	return layer_out
@@ -311,8 +320,10 @@ def buildSimpleResnet(num_classes=10, input_shape = (32,32,1)):
 
 	# define model input
 	visible = Input(shape=input_shape)
+
 	# add vgg module
 	layer = residual_module(visible, 64)
+
 	# create model
 	layer = Flatten()(layer)
 	layer = Dense(64, activation='relu')(layer)
@@ -330,13 +341,16 @@ def buildSimpleResnet(num_classes=10, input_shape = (32,32,1)):
 
 
 def wide_residual_block(x, filters, n, strides, dropout):
+
 	# Normal part
 	x_res = Conv2D(filters, (3,3), strides=strides, padding="same")(x)# , kernel_regularizer=l2(5e-4)
 	x_res = BatchNormalization()(x_res)
 	x_res = Activation('relu')(x_res)
 	x_res = Conv2D(filters, (3,3), padding="same")(x_res)
+
 	# Alternative branch
 	x = Conv2D(filters, (1,1), strides=strides)(x)
+
 	# Merge Branches
 	x = Add()([x_res, x])
 
@@ -345,12 +359,15 @@ def wide_residual_block(x, filters, n, strides, dropout):
 		x_res = BatchNormalization()(x)
 		x_res = Activation('relu')(x_res)
 		x_res = Conv2D(filters, (3,3), padding="same")(x_res)
+
 		# Apply dropout if given
 		if dropout: x_res = Dropout(dropout)(x)
+
 		# Second part
 		x_res = BatchNormalization()(x_res)
 		x_res = Activation('relu')(x_res)
 		x_res = Conv2D(filters, (3,3), padding="same")(x_res)
+
 		# Merge branches
 		x = Add()([x, x_res])
 
@@ -398,6 +415,20 @@ def build_wide_resnet(n, k, num_classes=10, input_shape = (32,32,1),  act= "relu
 		          optimizer=keras.optimizers.Adam(),
 		          metrics=['accuracy'])
 
+	return model
+
+
+def buildStacking(num_classes=10):
+
+	model = Sequential()
+
+	model.add(Dense(128, activation='relu'))
+	model.add(Dropout(0.3))
+	model.add(Dense(128, activation='relu'))
+
+	model.add(Dense(num_classes, activation='softmax'))
+
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=  ['accuracy'])
 	return model
 
 

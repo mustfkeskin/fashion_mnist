@@ -1,6 +1,10 @@
 import os
+import pickle
+
 import pandas as pd
 import numpy as np
+
+from sklearn.metrics import precision_recall_fscore_support, confusion_matrix
 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -9,7 +13,9 @@ import plotly.figure_factory as ff
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 from plotly import tools
 
-from sklearn.metrics import precision_recall_fscore_support, confusion_matrix
+from skimage.color import rgb2gray
+from skimage import transform
+
 
 
 def create_trace(x,y,ylabel,color):
@@ -23,8 +29,12 @@ def create_trace(x,y,ylabel,color):
             )
         return trace
     
-def plot_accuracy_and_loss(history, model_name):
-    hist     = history.history
+def plot_accuracy_and_loss(history, model_name = ""):
+    if(hasattr(history, "history")):
+        hist = history.history
+    else:
+        hist = history
+
     acc      = hist['acc']
     val_acc  = hist['val_acc']
     loss     = hist['loss']
@@ -81,10 +91,7 @@ def get_pred_and_metrics(model, X_test, y_true, target_names):
 
 def majorityVoting(pred_df, y_true, target_names):
     y_pred = np.asarray([np.argmax(np.bincount(pred_df.loc[row,:])) for row in range(pred_df.shape[0])])
-
-    prfs = precision_recall_fscore_support(y_true, y_pred)
-    df   = accuracyMetrics2df(prfs, target_names = target_names.values())
-    return df
+    return y_pred
 
 def plot_confussion_matrix(y_true, y_pred, target_names, model_name):
     z = confusion_matrix(y_true, y_pred) 
@@ -96,3 +103,31 @@ def plot_confussion_matrix(y_true, y_pred, target_names, model_name):
 
     fig = go.Figure(data=fig, layout=layout)
     iplot(fig, filename=model_name + ".png")
+
+
+def resize_32x32(imgs):
+    imgs = imgs.reshape((-1, 28, 28, 1))
+    resized_imgs = np.zeros((imgs.shape[0], 32, 32, 1))
+    for i in range(imgs.shape[0]):
+        resized_imgs[i, ..., 0] = transform.resize(imgs[i, ..., 0], (32, 32))
+    return resized_imgs
+
+
+def save_prfs_and_modelHistory(data_aug, model_name, history, metrics):
+
+    if(data_aug):
+        suffix = "_dataAug.pickle"
+    else:
+        suffix += ".pickle"
+    
+
+    historyFile = "../Models/" + model_name + '_hist'
+    with open(historyFile + suffix, 'wb') as f:
+        pickle.dump(history, f)
+        
+        
+    metricsFile = "../Models/" + model_name + '_metrics'
+    with open(metricsFile + suffix, 'wb') as f:
+        pickle.dump(metrics, f)
+
+
