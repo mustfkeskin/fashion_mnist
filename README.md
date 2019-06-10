@@ -71,12 +71,17 @@ Hazırlanan docker için token'a gerek yok. 127.0.0.1:8888 adresinden direk ula�
 Token üzerinden gitmek isteyenler dockerfile'daki --NotebookApp.token= parametresini silmeleri yeterlidir. <br>
  :))
 
-### 4) Notebook klasörü altındaki cnn.ipynb seçilerek çalıştırılabilir.
+### 4) Eğitim ve Test verilerinin indirilmesi ve Data klasörü altına koyulması
+`Fashion-MNIST` veriseti: https://www.kaggle.com/zalando-research/fashionmnist/downloads/fashionmnist.zip/4
+### 5) Notebook klasörü altındaki cnn.ipynb seçilerek modeller eğitilebilir.
+
 
 ## Sonuclar
 Sonuçlar kısmında her bir algoritma için ilk satırda yer alan accuracy, loss ve confussion matrisleri 20 epoch ve data augmentation yapılmamış sonuçları anlatamaktadır. <br>
 İkinci satırdaki sonuçlar ise 50 epoch ve data augmentation sonucu elde edilen sonuçları içermektedir. Ek olarak ikinci satırda overfit olmasını engellemek için EarlyStopping kullanılmıştır. <br>
 Test sonuçlarında yer alan tabloda '_dataAug' data augmentation yapıldığı anlamına gelmektedir.
+
+### Model sonuçları bir arada görmek için Notebook/predict_and_plot_results.ipynb çalıştırılır.
 
 ### Test Sonuçları
 | Model Adı               | test_acc |
